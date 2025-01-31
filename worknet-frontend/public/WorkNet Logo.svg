@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 200" aria-labelledby="title desc" fill="none">
+<circle cx="100" cy="100" r="10" fill="#007BFF"/>
+<circle cx="200" cy="50" r="10" fill="#007BFF"/>
+<circle cx="300" cy="150" r="10" fill="#007BFF"/>
+<circle cx="400" cy="100" r="10" fill="#007BFF"/>
+<text x="50%" y="180" text-anchor="middle" font-family="Arial, sans-serif" font-size="36" fill="#333" font-weight="bold" letter-spacing="2">
+    <tspan fill="#007BFF">Work</tspan><tspan>Net</tspan>
+</text><path stroke="#007BFF" stroke-width="3" d="m100 100 100-50m0 0 100 100m0 0 100-50"/></svg>
