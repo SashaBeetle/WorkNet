@@ -7,12 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Interfaces\" />
-    <Folder Include="Services\" />
+    <PackageReference Include="AutoMapper" Version="14.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.5" />
+    <PackageReference Include="System.Linq" Version="4.3.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.5" />
+    <ProjectReference Include="..\Worknet.Core\Worknet.Core.csproj" />
+    <ProjectReference Include="..\Worknet.Database\Worknet.DAL.csproj" />
+    <ProjectReference Include="..\Worknet.Shared\Worknet.Shared.csproj" />
   </ItemGroup>
 
 </Project>
