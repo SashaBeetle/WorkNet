@@ -1,25 +1,11 @@
 @Worknet.API_HostAddress = https://localhost:7047
 
-GET {{Worknet.API_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
-
 POST {{Worknet.API_HostAddress}}/api/auth/login
 Content-Type: application/json
 
 {
-  //AuthUser
-}
-
-###
-
-POST {{Worknet.API_HostAddress}}/api/auth/login
-Content-Type: application/json
-
-{
-  "UserEmail": "test@example.com",
-  "Password": "SecurePassword123"
+  "UserEmail": "test4@example.com",
+  "Password": "SecurePassword123!@"
 }
 
 ###
@@ -27,9 +13,26 @@ POST {{Worknet.API_HostAddress}}/api/auth/register
 Content-Type: application/json
 
 {
-  "UserEmail": "test2@example.com",
-  "Password": "SecurePassword123",
-  "UserName": "Userok2"
+  "UserEmail": "test4@example.com",
+  "Password": "SecurePassword123!@",
+  "UserName": "Userok4"
 }
+
+###
+
+POST {{Worknet.API_HostAddress}}/api/auth/logout
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IlRFU1Q0QEVYQU1QTEUuQ09NIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZSI6IlVTRVJPSzQiLCJleHAiOjE3NDgxMzM4ODUsImlzcyI6IldvcmtuZXRBcHAiLCJhdWQiOiJXb3JrbmV0VXNlcnMifQ.-HanaUqEn-dVFVcGoVIzOdnlOCy86HelhWCAuFXXark
+###
+
+POST {{Worknet.API_HostAddress}}/api/auth/logout
+
+###
+
+POST {{Worknet.API_HostAddress}}/api/auth/logout
+
+###
+
+POST {{Worknet.API_HostAddress}}/api/auth/logout
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IlRFU1Q0QEVYQU1QTEUuQ09NIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZSI6IlVTRVJPSzQiLCJleHAiOjE3NDg0ODY5MDksImlzcyI6IldvcmtuZXRBcHAiLCJhdWQiOiJXb3JrbmV0VXNlcnMifQ.rgqGg4zMcW0Unzto31BE1zWuG8EUhPtm10114VwWE0E
 
 ###

@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Worknet.BLL.Interfaces;
 using Worknet.BLL.Mapping;
 using Worknet.BLL.Services;
+using Worknet.Core.Entities;
 using Worknet.DAL;
 using Worknet.Shared.Models.Auth;
 
@@ -66,6 +68,10 @@ internal static class WebAppBuilder
 
     public static void AddServices(IServiceCollection services)
     {
+        services.AddIdentity<User, IdentityRole>()
+            .AddEntityFrameworkStores<WorknetDbContext>()
+            .AddDefaultTokenProviders();
+
         services.AddScoped<IUserService, UserService>();
     }
 }

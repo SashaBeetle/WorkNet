@@ -11,8 +11,8 @@ public static class JwtUtil
     {
         var claims = new List<Claim>
         {
-            new (ClaimTypes.NameIdentifier, userEmail),
-            new (ClaimTypes.Name, userName)
+            new (ClaimTypes.NameIdentifier, userEmail.ToUpper()),
+            new (ClaimTypes.Name, userName.ToUpper())
         };
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConfig.Key));
@@ -22,7 +22,7 @@ public static class JwtUtil
             issuer: jwtConfig.Issuer,
             audience: jwtConfig.Audience,
             claims: claims,
-            expires: DateTime.Now.AddHours(2),
+            expires: DateTime.UtcNow.AddHours(100),
             signingCredentials: creds);
 
         return new JwtSecurityTokenHandler().WriteToken(token);

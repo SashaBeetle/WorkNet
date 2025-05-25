@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Worknet.BLL.Interfaces;
+using Worknet.Shared.Constants;
 using Worknet.Shared.Helpers;
 using Worknet.Shared.Models.Auth;
 
@@ -15,11 +18,9 @@ public class AuthController(IUserService userService, IOptions<JwtConfig> jwtOpt
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] AuthUser authUser)
     {
-        var user = await userService.GetUserByEmailAsync(authUser.UserEmail);
-        if (user is null || PasswordHelper.VerifyPassword(user.PasswordHash, authUser.Password))
-            return Unauthorized();
-        
-        var token = JwtUtil.GenerateJwtToken(user.NormalizedEmail, user.NormalizedUserName, _jwtConfig);
+        var user = await userService.IsUserLoggedIn(authUser);
+
+        var token = JwtUtil.GenerateJwtToken(user.Email, user.UserName, _jwtConfig);
 
         return Ok(new { token });
     }
@@ -29,8 +30,17 @@ public class AuthController(IUserService userService, IOptions<JwtConfig> jwtOpt
     {
         var userInfo = await userService.CreateUserAsync(registerUser);
 
-        var token = JwtUtil.GenerateJwtToken(userInfo.Email.ToLower(),userInfo.UserName.ToLower(), _jwtConfig);
+        var token = JwtUtil.GenerateJwtToken(userInfo.Email, userInfo.UserName, _jwtConfig);
 
         return Ok(new { userInfo, token });
+    }
+
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [HttpPost("logout")]
+    public async Task<IActionResult> Logout()
+    {
+        await userService.UserLogoutAsync();
+
+        return Ok(new { message = ResponseMessages.LoggetOutSuccessfully });
     }
 }
