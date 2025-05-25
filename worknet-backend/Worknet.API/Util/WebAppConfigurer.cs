@@ -7,9 +7,11 @@ internal static class WebAppConfigurer
         {
             app.MapOpenApi();
         }
+        app.UseRouting();
 
         app.UseHttpsRedirection();
 
+        app.UseAuthentication();
         app.UseAuthorization();
 
         app.MapControllers();

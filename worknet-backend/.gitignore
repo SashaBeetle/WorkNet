@@ -35,6 +35,7 @@ TestResult.xml
 [Rr]eleasePS/
 dlldata.c
 
+**/App_Data/
 *_i.c
 *_p.c
 *_i.h
@@ -148,6 +149,7 @@ csx/
 AppPackages/
 
 # Others
+App_Data/*
 sql/
 *.Cache
 ClientBin/

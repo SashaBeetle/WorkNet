@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Worknet.DAL;
@@ -11,9 +12,11 @@ using Worknet.DAL;
 namespace Worknet.DAL.Migrations
 {
     [DbContext(typeof(WorknetDbContext))]
-    partial class WorknetDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250525161353_add files table and fix Navigation Properties")]
+    partial class addfilestableandfixNavigationProperties
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

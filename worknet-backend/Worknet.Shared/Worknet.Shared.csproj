@@ -7,12 +7,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Constants\" />
+    <Folder Include="Models\Responce\" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.5" />
     <PackageReference Include="System.Linq" Version="4.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Worknet.Core\Worknet.Core.csproj" />
   </ItemGroup>
 
 </Project>
