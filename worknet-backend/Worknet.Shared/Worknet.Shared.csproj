@@ -15,4 +15,8 @@
     <PackageReference Include="System.Linq" Version="4.3.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Worknet.Core\Worknet.Core.csproj" />
+  </ItemGroup>
+
 </Project>

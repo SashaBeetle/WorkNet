@@ -2,16 +2,17 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Worknet.Core.Configurations;
 using Worknet.Shared.Models.Auth;
 
 namespace Worknet.Shared.Helpers;
 public static class JwtUtil
 {
-    public static string GenerateJwtToken(string userEmail, string userName, JwtConfig jwtConfig)
+    public static string GenerateJwtToken(string userId, string userName, JwtConfig jwtConfig)
     {
         var claims = new List<Claim>
         {
-            new (ClaimTypes.NameIdentifier, userEmail.ToUpper()),
+            new (ClaimTypes.NameIdentifier, userId),
             new (ClaimTypes.Name, userName.ToUpper())
         };
 

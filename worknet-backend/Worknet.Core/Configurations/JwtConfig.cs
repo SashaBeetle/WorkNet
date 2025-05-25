@@ -1,4 +1,4 @@
-﻿namespace Worknet.Shared.Models.Auth;
+﻿namespace Worknet.Core.Configurations;
 public class JwtConfig
 {
     public const string ConfigName = "Jwt";

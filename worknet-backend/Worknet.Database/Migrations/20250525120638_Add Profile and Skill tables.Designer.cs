@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Worknet.DAL;
@@ -11,9 +12,11 @@ using Worknet.DAL;
 namespace Worknet.DAL.Migrations
 {
     [DbContext(typeof(WorknetDbContext))]
-    partial class WorknetDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250525120638_Add Profile and Skill tables")]
+    partial class AddProfileandSkilltables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -154,38 +157,6 @@ namespace Worknet.DAL.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Worknet.Core.Entities.GoogleDriveFile", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("ExtensionType")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("ProfileId")
-                        .HasColumnType("text");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("ViewLink")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProfileId");
-
-                    b.ToTable("Files");
-                });
-
             modelBuilder.Entity("Worknet.Core.Entities.Profile", b =>
                 {
                     b.Property<string>("Id")
@@ -242,7 +213,10 @@ namespace Worknet.DAL.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("ProfileId")
+                    b.Property<int>("ProfileId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("ProfileId1")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -251,7 +225,7 @@ namespace Worknet.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProfileId");
+                    b.HasIndex("ProfileId1");
 
                     b.ToTable("Skills");
                 });
@@ -371,16 +345,6 @@ namespace Worknet.DAL.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Worknet.Core.Entities.GoogleDriveFile", b =>
-                {
-                    b.HasOne("Worknet.Core.Entities.Profile", "Profile")
-                        .WithMany("Files")
-                        .HasForeignKey("ProfileId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.Navigation("Profile");
-                });
-
             modelBuilder.Entity("Worknet.Core.Entities.Profile", b =>
                 {
                     b.HasOne("Worknet.Core.Entities.User", "User")
@@ -396,7 +360,7 @@ namespace Worknet.DAL.Migrations
                 {
                     b.HasOne("Worknet.Core.Entities.Profile", "Profile")
                         .WithMany("Skills")
-                        .HasForeignKey("ProfileId")
+                        .HasForeignKey("ProfileId1")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -405,8 +369,6 @@ namespace Worknet.DAL.Migrations
 
             modelBuilder.Entity("Worknet.Core.Entities.Profile", b =>
                 {
-                    b.Navigation("Files");
-
                     b.Navigation("Skills");
                 });
 #pragma warning restore 612, 618

@@ -6,9 +6,10 @@ using System.Text;
 using Worknet.BLL.Interfaces;
 using Worknet.BLL.Mapping;
 using Worknet.BLL.Services;
+using Worknet.Core.Configurations;
 using Worknet.Core.Entities;
 using Worknet.DAL;
-using Worknet.Shared.Models.Auth;
+using Worknet.Infrastructure;
 
 namespace Worknet.API.Util;
 internal static class WebAppBuilder
@@ -29,7 +30,7 @@ internal static class WebAppBuilder
 
         AddJwtAuthentication(configurations, services);
         AddConfigs(configurations, services);
-        AddServices(services);
+        AddServices(configurations, services);
 
         return builder.Build();
     }
@@ -64,14 +65,19 @@ internal static class WebAppBuilder
     public static void AddConfigs(IConfiguration configurations, IServiceCollection services)
     {
         services.Configure<JwtConfig>(configurations.GetSection(JwtConfig.ConfigName));
+        services.Configure<GoogleDriveConfig>(configurations.GetSection(GoogleDriveConfig.ConfigName));
     }
 
-    public static void AddServices(IServiceCollection services)
+    public static void AddServices(IConfiguration configurations, IServiceCollection services)
     {
         services.AddIdentity<User, IdentityRole>()
             .AddEntityFrameworkStores<WorknetDbContext>()
             .AddDefaultTokenProviders();
 
+        services.AddScoped<IFileService, FileService>();
         services.AddScoped<IUserService, UserService>();
+        
+        services.AddInfrastructure(configurations);
+
     }
 }
