@@ -1,98 +1,61 @@
-<div className="min-h-screen bg-gray-100">
-    <!-- {/* Navbar */} -->
-    <header className="bg-white shadow fixed w-full z-10">
-      <div className="container mx-auto px-4 flex justify-between items-center py-2">
-        <div className="flex items-center space-x-4">
-          <h1 className="text-xl font-bold text-blue-600">LinkedIn</h1>
-          <div className="relative">
-            <input
-              type="text"
-              placeholder="Search"
-              className="border rounded-full px-4 py-1 w-64 focus:outline-none focus:ring focus:ring-blue-300"
-            />
-            <!-- <Search className="absolute right-3 top-2 text-gray-500" size={20} /> -->
+<!-- Main Container -->
+<div class="pt-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
+
+  <!-- Profile Sidebar -->
+ <div class="hidden md:block">
+  <div class="bg-white shadow rounded-lg p-4 relative">
+    <div class="flex justify-end gap-16">
+      <div class="text-center ">
+        <h3 class="text-lg font-semibold">John Doe</h3>
+        <p class="text-sm text-gray-500">Software Developer</p>
+      </div>
+          
+      <img [src]="'https://ui-avatars.com/api/?name=' + user.name + '+' + user.surname" 
+           class="rounded-full w-14 h-14" alt="Avatar">
+    </div>
+    <div class="text-center mt-4">
+      <button 
+        (click)="isMoreInfoVisible = !isMoreInfoVisible"
+        class="mt-4 w-full text-sm text-blue-600">
+        {{ isMoreInfoVisible ? 'Less' : 'More'  }}
+      </button>
+    </div>
+
+          <div *ngIf="isMoreInfoVisible"
+            @slideToggle
+            class="mt-4 text-sm text-gray-700">
+            <p><strong>Email:</strong> dgacmail.com</p>
+            <p><strong>Location:</strong> San Francisco, CA</p>
+            <p><strong>Joined:</strong> January 2023</p>
+          </div>
+     
+  </div>
+</div>
+
+  <!-- Feed Section -->
+  <div class="md:col-span-2 space-y-4">
+    <!-- Create Post Card -->
+    <div class="bg-white shadow rounded-lg p-4">
+      <textarea placeholder="What's on your mind?" rows="3" class="w-full border rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"></textarea>
+      <div class="flex justify-end mt-2">
+        <button class="text-white bg-blue-600 hover:bg-blue-700 font-medium rounded-lg text-sm px-4 py-2">Post</button>
+      </div>
+    </div>
+
+    @for (post of posts; track $index) 
+    {
+      <!-- Sample Post -->
+      <div class="bg-white shadow rounded-lg p-4">
+        <div class="flex space-x-4">
+          <img src="https://img.freepik.com/premium-photo/3d-avatar-cartoon-character_113255-93283.jpg" class="rounded-full w-8 h-8" alt="Avatar">
+          <div>
+            <h4 class="font-semibold">{{post.name}}</h4>
+            <p class="text-sm text-gray-500">{{post.time}}</p>
+            <p class="mt-2 text-sm">{{post.content}}</p>
           </div>
         </div>
-        <div className="flex items-center space-x-6">
-          <Button variant="ghost">
-            <!-- <MessageSquare size={24} /> -->
-          </Button>
-          <Button variant="ghost">
-            <!-- <Bell size={24} /> -->
-          </Button>
-          <Button variant="ghost">
-            <!-- <User size={24} /> -->
-          </Button>
-        </div>
       </div>
-    </header>
-
-    <!-- {/* Main Content */} -->
-    <div className="container mx-auto px-4 pt-20 grid grid-cols-3 gap-6">
-      <!-- {/* Left Sidebar */} -->
-      <!-- <motion.div className="col-span-1" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-        <Card>
-          <CardContent> -->
-            <div className="text-center">
-              <img
-                src="https://via.placeholder.com/80"
-                alt="Profile"
-                className="mx-auto rounded-full"
-              />
-              <h2 className="text-lg font-semibold mt-2">John Doe</h2>
-              <p className="text-gray-500 text-sm">Software Developer</p>
-              <Button variant="ghost" className="mt-4 w-full">
-                View Profile
-              </Button>
-            </div>
-          <!-- </CardContent>
-        </Card>
-      </motion.div> -->
-
-      <!-- {/* Feed Section */} -->
-      <!-- <motion.div
-        className="col-span-2"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-      >
-        <Card>
-          <CardContent> -->
-            <textarea
-              placeholder="Share something..."
-              className="w-full border rounded-lg p-3 focus:outline-none focus:ring focus:ring-blue-300"
-            ></textarea>
-            <div className="flex justify-between items-center mt-2">
-              <Button variant="ghost">
-                <!-- <Plus size={20} /> Add Photo -->
-              </Button>
-              <Button variant="default">Post</Button>
-            </div>
-          <!-- </CardContent>
-        </Card> -->
-
-        <div className="space-y-4 mt-4">
-          <!-- {/* Post Card */}
-          {[1, 2, 3].map((post) => ( -->
-            <!-- <Card key={post}>
-              <CardContent> -->
-                <div className="flex items-start space-x-4">
-                  <img
-                    src="https://via.placeholder.com/40"
-                    alt="Profile"
-                    className="rounded-full"
-                  />
-                  <div>
-                    <h3 className="font-semibold">Jane Smith</h3>
-                    <p className="text-gray-500 text-sm">2 hours ago</p>
-                    <p className="mt-2">
-                      This is an example post content to mimic LinkedIn's feed.
-                    </p>
-                  </div>
-                </div>
-              <!-- </CardContent>
-            </Card>
-          ))} -->
-        </div>
-      <!-- </motion.div> -->
-    </div>
+    }
+    <!-- Repeat this post block for more posts -->
   </div>
+</div>

@@ -1,3 +1,3 @@
-<app-header />
+<app-header *ngIf="!hiddenHeaderRoutes.includes(router.url)" />
+
 <router-outlet />
-<app-home></app-home>
