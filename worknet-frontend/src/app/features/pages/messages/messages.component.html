@@ -1,0 +1,68 @@
+<!-- Messages Page Layout -->
+<div class="pt-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-6">
+
+  <!-- Sidebar: Contacts List -->
+  <div class="bg-white shadow rounded-lg p-4 md:col-span-1">
+    <h3 class="text-lg font-semibold mb-4">Messages</h3>
+    <ul class="space-y-4">
+      @for (contact of contacts; track $index)
+      {
+        <li (click)="selectContact(contact)"
+            class="flex items-center cursor-pointer hover:bg-gray-100 p-2 rounded transition">
+          <img [src]="contact.avatar" class="w-10 h-10 rounded-full" alt="Avatar">
+          <div class="ml-3">
+            <p class="font-medium text-sm">{{contact.name}}</p>
+            <p class="text-xs text-gray-500 truncate w-40">{{contact.lastMessage}}</p>
+          </div>
+        </li>
+      }
+    </ul>
+  </div>
+
+  <!-- Main Chat Area -->
+  <div class="bg-white shadow rounded-lg p-4 md:col-span-3 flex flex-col h-[600px]">
+    
+    <div *ngIf="selectedContact; else noContact" class="flex flex-col flex-grow">
+      <!-- Chat Header -->
+      <div class="flex items-center border-b pb-3 mb-3">
+        <img [src]="selectedContact.avatar" class="w-10 h-10 rounded-full" alt="Avatar">
+        <div class="ml-3">
+          <h4 class="font-semibold">{{selectedContact.name}}</h4>
+          <p class="text-xs text-gray-500">Online</p>
+        </div>
+      </div>
+
+      <!-- Chat Messages -->
+      <div class="flex-grow overflow-y-auto space-y-4 pr-2">
+        @for (message of selectedContact.messages; track $index)
+        {
+          <div [ngClass]="{'text-right': message.from === 'me'}">
+            <p class="inline-block px-4 py-2 rounded-lg text-sm"
+               [ngClass]="message.from === 'me' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-800'">
+              {{message.text}}
+            </p>
+            <div class="text-xs text-gray-400 mt-1">{{message.time}}</div>
+          </div>
+        }
+      </div>
+
+      <!-- Input -->
+      <div class="mt-4 flex items-center">
+        <input type="text" [(ngModel)]="newMessage"
+               placeholder="Type a message..." 
+               class="flex-grow border rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300" />
+        <button (click)="sendMessage()" 
+                class="ml-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm">
+          Send
+        </button>
+      </div>
+    </div>
+
+    <ng-template #noContact>
+      <div class="text-center text-gray-400 mt-32">
+        <p>Select a conversation to start messaging.</p>
+      </div>
+    </ng-template>
+  </div>
+
+</div>

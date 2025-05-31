@@ -1,8 +1,11 @@
-﻿namespace Worknet.API.Util;
+﻿using Worknet.Shared.Constantsl;
+
+namespace Worknet.API.Util;
 internal static class WebAppConfigurer
 {
     public static async Task ConfugureWebApp(WebApplication app)
     {
+        app.UseCors(AppSettings.FrontendAppName);
         if (app.Environment.IsDevelopment())
         {
             app.MapOpenApi();

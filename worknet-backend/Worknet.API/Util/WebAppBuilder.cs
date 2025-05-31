@@ -10,6 +10,7 @@ using Worknet.Core.Configurations;
 using Worknet.Core.Entities;
 using Worknet.DAL;
 using Worknet.Infrastructure;
+using Worknet.Shared.Constantsl;
 
 namespace Worknet.API.Util;
 internal static class WebAppBuilder
@@ -19,6 +20,16 @@ internal static class WebAppBuilder
         var builder = WebApplication.CreateBuilder(args);
         var services = builder.Services;
         var configurations = builder.Configuration;
+
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy(AppSettings.FrontendAppName, policy =>
+            {
+                policy.WithOrigins("http://localhost:4200") // 👈 Allow your Angular dev server
+                      .AllowAnyHeader()
+                      .AllowAnyMethod();
+            });
+        });
 
         services.AddControllers();
         services.AddOpenApi();

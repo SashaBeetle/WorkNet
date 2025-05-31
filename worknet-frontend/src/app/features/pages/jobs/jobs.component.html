@@ -1,0 +1,52 @@
+<!-- Jobs Page Layout -->
+<div class="pt-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-6">
+
+  <!-- Sidebar Filters -->
+  <div class="bg-white shadow rounded-lg p-4 space-y-4 md:col-span-1">
+    <h3 class="text-lg font-semibold">Filters</h3>
+
+    <div>
+      <label class="block text-sm font-medium mb-1">Location</label>
+      <input [(ngModel)]="filters.location" type="text"
+             placeholder="e.g. New York" 
+             class="w-full border rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300" />
+    </div>
+
+    <div>
+      <label class="block text-sm font-medium mb-1">Type</label>
+      <select [(ngModel)]="filters.type"
+              class="w-full border rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300">
+        <option value="">All</option>
+        <option value="Full-time">Full-time</option>
+        <option value="Part-time">Part-time</option>
+        <option value="Remote">Remote</option>
+      </select>
+    </div>
+
+    <button (click)="applyFilters()"
+            class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg text-sm font-medium">
+      Apply Filters
+    </button>
+  </div>
+
+  <!-- Job Listings -->
+  <div class="md:col-span-3 space-y-4">
+    <h2 class="text-xl font-semibold mb-2">Available Vacancies</h2>
+
+    <div *ngFor="let job of filteredJobs" class="bg-white shadow rounded-lg p-4">
+      <div class="flex justify-between items-start">
+        <div>
+          <h3 class="text-lg font-semibold">{{job.title}}</h3>
+          <p class="text-sm text-gray-500">{{job.company}} · {{job.location}}</p>
+          <p class="mt-2 text-sm text-gray-700">{{job.description}}</p>
+        </div>
+        <button class="text-sm text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg">Apply</button>
+      </div>
+    </div>
+
+    <div *ngIf="filteredJobs.length === 0" class="text-center text-gray-500 mt-10">
+      No jobs found.
+    </div>
+  </div>
+
+</div>
