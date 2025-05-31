@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet, Router } from '@angular/router';
 import { HeaderComponent } from './features/pages/header/header.component';
-
+import { AuthService } from './core/services/auth.service';
 @Component({
     selector: 'app-root',
     imports: [RouterOutlet, HeaderComponent, CommonModule],
@@ -12,5 +12,9 @@ import { HeaderComponent } from './features/pages/header/header.component';
 export class AppComponent {
   hiddenHeaderRoutes = ['/login', '/register', '/forgot-password']; 
 
-  constructor(public router: Router) {}
+  constructor(private authService: AuthService, public router: Router) {}
+      ngOnInit() {
+    this.authService.initUserFromToken();
+  }
 }
+

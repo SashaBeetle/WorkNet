@@ -7,6 +7,7 @@ public interface IUserService
 {
     public Task<UserDto> FindUserByNameAsync(string userName);
     public Task<UserDto?> GetUserByEmailAsync(string email);
+    public Task<UserDto> GetUserByIdAsync(string id);
     public Task<UserInfo> CreateUserAsync(RegisterUser authUser);
     public Task<UserDto> IsUserLoggedIn(AuthUser authUser);
     public Task UserLogoutAsync();

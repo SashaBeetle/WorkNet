@@ -106,5 +106,11 @@
   },
   "cli": {
     "analytics": "c632c5bd-e107-40a1-bb03-e17dce60426a"
+  },
+  "fileReplacements": [
+  {
+    "replace": "src/environments/environment.ts",
+    "with": "src/environments/environment.prod.ts"
   }
+]
 }
