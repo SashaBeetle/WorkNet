@@ -50,6 +50,16 @@ public class UserService(
         return mapper.Map<UserDto>(user);
     }
 
+    public async Task<UserDto> GetUserByIdAsync(string id)
+    {
+        var user = await userManager.FindByIdAsync(id);
+
+        if (user is null)
+            throw new WorknetException("User not found.", $"User was expected but found null for Id: {id}.");
+
+        return mapper.Map<UserDto>(user);
+    }
+
     public async Task<UserDto> IsUserLoggedIn(AuthUser authUser)
     {
         var user = await userManager.FindByEmailAsync(authUser.UserEmail);

@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Worknet.BLL.Interfaces;
-using Worknet.Shared.Interfaces;
 
 namespace Worknet.API.Controllers;
 
@@ -17,8 +16,16 @@ public class ProfileController : ControllerBase
         await using var stream = file.OpenReadStream();
         var result = await fileService.UploadFileAsync(stream, file.FileName);
 
-        var result2 = await fileService.GetFileByIdAsync(result.Id);
-
         return Ok(new { result });
     }
+    //[HttpPost]
+    //public IActionResult CreateProfile([FromBody] ProfileDto profile)
+    //{
+    //    if (!ModelState.IsValid)
+    //        return BadRequest(ModelState);
+
+    //    // Save profile to DB or do something
+    //    return Ok(new { message = "Profile created", profile });
+    //}
+
 }
