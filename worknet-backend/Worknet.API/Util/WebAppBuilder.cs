@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using System.Text.Json.Serialization;
 using Worknet.BLL.Interfaces;
 using Worknet.BLL.Mapping;
 using Worknet.BLL.Services;
@@ -25,13 +26,17 @@ internal static class WebAppBuilder
         {
             options.AddPolicy(AppSettings.FrontendAppName, policy =>
             {
-                policy.WithOrigins("http://localhost:4200") // 👈 Allow your Angular dev server
+                policy.WithOrigins("http://localhost:4200") 
                       .AllowAnyHeader()
                       .AllowAnyMethod();
             });
         });
 
-        services.AddControllers();
+        services.AddControllers().AddJsonOptions(options =>
+        {
+            options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+        });
+
         services.AddOpenApi();
 
         services.AddAutoMapper(typeof(MappingProfile));
@@ -87,6 +92,7 @@ internal static class WebAppBuilder
 
         services.AddScoped<IFileService, FileService>();
         services.AddScoped<IUserService, UserService>();
+        services.AddScoped<IProfileService, ProfileService>();
         
         services.AddInfrastructure(configurations);
 

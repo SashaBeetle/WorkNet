@@ -1,76 +1,63 @@
-import { Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { AuthService } from '../../../core/services/auth.service';
 import { Router } from '@angular/router';
-import { CommonModule } from '@angular/common';
-import { AsyncPipe } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { isLoggedIn, selectCurrentUser } from '../../../ngrx/selectors/user.selectors';
 import { User } from '../../../core/models/user.models';
-import { Observable, timer  } from 'rxjs';
-import { takeUntil , startWith, tap } from 'rxjs/operators';
-
+import { Observable, timer, combineLatest, of } from 'rxjs';
+import { map, startWith, tap,take, switchMap, distinctUntilChanged } from 'rxjs/operators';
+import { CommonModule, AsyncPipe } from '@angular/common';
 
 
 @Component({
   selector: 'app-header',
-  imports: [CommonModule, AsyncPipe],
+  imports: [CommonModule, AsyncPipe], 
   templateUrl: './header.component.html',
-  styleUrl: './header.component.scss'
+  styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent {
-  user$!: Observable<User | null>;
-  isLoaded: Observable<boolean>;
+  user$: Observable<User | null>;
+  isLoaded$: Observable<boolean>;
+  displayState$: Observable<'initialLoading' | 'appLoading' | 'guest' | 'user'>;
 
-  constructor(private authService: AuthService,private store: Store, private router: Router) {
-        this.user$ = this.store.select(selectCurrentUser);
-        this.isLoaded = this.store.select(isLoggedIn);
+  constructor(
+    private authService: AuthService,
+    private store: Store,
+    private router: Router
+  ) {
+    this.user$ = this.store.select(selectCurrentUser);
+    this.isLoaded$ = this.store.select(isLoggedIn);
 
-  }
+    const mandatoryLoadTimeComplete$ = timer(1000).pipe(
+      map(() => true),
+      startWith(false)
+    );
+    
+    this.displayState$ = mandatoryLoadTimeComplete$.pipe(
+      switchMap(mandatoryTimeHasElapsed => {
+        if (!mandatoryTimeHasElapsed) {
+          return of('initialLoading' as const);
+        } else {
+          return combineLatest([this.isLoaded$, this.user$]).pipe(
+            map(([dataIsActuallyLoaded, currentUser]) => {
+              if (!dataIsActuallyLoaded && authService.isLoggedIn()) {
+                return 'initialLoading' as const;
+              } else if (!dataIsActuallyLoaded){
+                return 'guest' as const;
+              }else{
+                return currentUser ? ('user' as const) : ('guest' as const);
 
-  ngOnInit(): void {
-    // debugger; // Ваш debugger breakpoint
-
-    // const loadingTimeout$ = timer(3000).pipe(
-    //   tap(() => {
-    //     // Цей tap спрацює через 3 секунди
-    //     // Якщо this.isLoading все ще true, він встановить його в false.
-    //     // Це може бути запасним механізмом, якщо визначення стану користувача займає занадто багато часу.
-    //     if (this.isLoading) {
-    //         console.log('Loading timeout triggered. Setting isLoading to false.');
-    //         this.isLoading = false;
-    //     }
-    //   })
-    // );
-
-    // this.user$ = this.store.select(selectCurrentUser).pipe(
-    //   tap(userFromStore => { // Для дебагу, що саме повертає селектор
-    //     console.log('Raw user from store selector:', userFromStore);
-    //   }),
-    //   catchError(error => {
-    //     // Якщо селектор selectCurrentUser видає помилку (наприклад, стан не ініціалізовано
-    //     // або логіка селектора дає збій для стану "немає користувача"),
-    //     // ми перехоплюємо її тут.
-    //     console.error('Error in selectCurrentUser stream, defaulting to null:', error);
-    //     // Повертаємо Observable з `null`, щоб потік продовжився.
-    //     // Це дозволить `startWith(null)` (якщо він після) або наступним операторам працювати коректно.
-    //     return of(null);
-    //   }),
-    //   startWith(null), // Гарантує, що user$ | async отримає початкове значення (null).
-    //                    // Це має змусити шаблон #loading (спінер) зникнути швидко.
-    //   tap(user => { // Цей tap тепер спрацює для значення від startWith(null),
-    //                 // потім для значення від selectCurrentUser (або of(null) з catchError).
-    //     console.log('User stream emitted (after startWith/catchError):', user);
-    //     // Логіка для вашого прапорця this.isLoading.
-    //     // Якщо спінер, яким керує this.isLoading, окремий від спінера в #loading,
-    //     // то ця логіка керує ним.
-    //     if (this.isLoading) {
-    //       this.isLoading = false;
-    //       console.log('User stream tap: isLoading set to false');
-    //     }
-    //   }),
-    //   takeUntil(loadingTimeout$) // Завершує Observable user$ після того, як loadingTimeout$ спрацює.
-    //                              // Це також гарантує, що tap в loadingTimeout$ виконається.
-    // );
+              }
+            })
+          );
+        }
+      }),
+      startWith('initialLoading' as const),
+      tap(currentState => {
+        console.log('Current displayState$:', currentState); // <-- THIS LINE
+      }),
+      distinctUntilChanged()
+    );
   }
 
   logout() {

@@ -10,6 +10,8 @@ public class WorknetDbContext : IdentityDbContext<User>
     public DbSet<Profile> Profiles { get; set; }
     public DbSet<Skill> Skills { get; set; }
     public DbSet<GoogleDriveFile> Files { get; set; }
+    public DbSet<Experience> Experiences { get; set; }
+    public DbSet<Education> Educations { get; set; }
     public override int SaveChanges()
     {
         UpdateTimestamps();
@@ -44,15 +46,27 @@ public class WorknetDbContext : IdentityDbContext<User>
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.Entity<Profile>()
-        .HasMany(p => p.Skills)
-        .WithOne(s => s.Profile)
-        .HasForeignKey(s => s.ProfileId)
-        .OnDelete(DeleteBehavior.Cascade);
+            .HasMany(p => p.Skills)
+            .WithOne(s => s.Profile)
+            .HasForeignKey(s => s.ProfileId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<Profile>()
-        .HasMany(p => p.Files)
-        .WithOne(s => s.Profile)
-        .HasForeignKey(s => s.ProfileId)
-        .OnDelete(DeleteBehavior.SetNull);
+            .HasMany(p => p.Experiences) 
+            .WithOne(e => e.Profile) 
+            .HasForeignKey(e => e.ProfileId) 
+            .OnDelete(DeleteBehavior.Cascade); 
+
+        modelBuilder.Entity<Profile>()
+            .HasMany(p => p.Educations)  
+            .WithOne(edu => edu.Profile) 
+            .HasForeignKey(edu => edu.ProfileId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<Profile>()
+            .HasMany(p => p.Files)
+            .WithOne(s => s.Profile)
+            .HasForeignKey(s => s.ProfileId)
+            .OnDelete(DeleteBehavior.SetNull);
     }
 }
