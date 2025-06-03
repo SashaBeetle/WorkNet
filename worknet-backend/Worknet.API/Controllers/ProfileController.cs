@@ -1,13 +1,18 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using Worknet.BLL.Interfaces;
+using Worknet.Shared.Models.DTOs;
 
 namespace Worknet.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class ProfileController : ControllerBase
+public class ProfileController(IProfileService profileService) : ControllerBase
 {
     [HttpPost("upload-file")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<IActionResult> UploadFile([FromForm] IFormFile file, [FromServices] IFileService fileService)
     {
         if (file == null || file.Length == 0)
@@ -18,14 +23,73 @@ public class ProfileController : ControllerBase
 
         return Ok(new { result });
     }
-    //[HttpPost]
-    //public IActionResult CreateProfile([FromBody] ProfileDto profile)
-    //{
-    //    if (!ModelState.IsValid)
-    //        return BadRequest(ModelState);
 
-    //    // Save profile to DB or do something
-    //    return Ok(new { message = "Profile created", profile });
-    //}
+    [HttpPut]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    public async Task<IActionResult> HandleProfile([FromBody] ProfileDto profile)
+    {
+        if (profile is null) return BadRequest();
+
+        bool isProfileExist = false;
+
+        if(!string.IsNullOrEmpty(profile.Id))
+            isProfileExist = await profileService.IsProfileExistForUserByUserId(profile.UserId);
+
+        if (isProfileExist)
+            profile = await profileService.UpdateProfileAsync(profile);
+        else
+            profile = await profileService.CreateProfileAsync(profile);
+
+
+        return Ok(new { profile });
+    }
+
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    public async Task<IActionResult> GetProfile()
+    {
+        try
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized();
+
+            var profile = await profileService.GetProfileByUserId(userId);
+
+            if (profile is null)
+                return NotFound();
+
+            return Ok(profile);
+        }
+        catch (Exception ex)
+        {
+            return NotFound();
+        }
+    }
+
+    [HttpGet("info")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    public async Task<IActionResult> GetProfileInfo()
+    {
+        try
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized();
+
+            var profile = await profileService.GetProfileByUserId(userId);
+
+            if (profile is null)
+                return NotFound();
+
+            return Ok(profile);
+        }
+        catch (Exception ex)
+        {
+            return NotFound();
+        }
+    }
 
 }

@@ -36,8 +36,8 @@ public class AuthController(IUserService userService, IOptions<JwtConfig> jwtOpt
         return Ok(new { userInfo, token });
     }
 
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpPost("logout")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<IActionResult> Logout()
     {
         await userService.UserLogoutAsync();

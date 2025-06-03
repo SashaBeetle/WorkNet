@@ -11,9 +11,12 @@ public class Profile : DbItem
     public string? About { get; set; } = string.Empty;
     public string Location { get; set; } = string.Empty;
 
+    public string? ProfilePhotoId { get; set; }
     public string UserId {  get; set; }
     public virtual User User { get; set; }
 
     public virtual ICollection<Skill> Skills { get; set; }
+    public virtual ICollection<Education> Educations { get; set; }
+    public virtual ICollection<Experience> Experiences { get; set; }
     public virtual ICollection<GoogleDriveFile> Files { get; set; }
 }

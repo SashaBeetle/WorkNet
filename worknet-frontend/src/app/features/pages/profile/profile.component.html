@@ -4,23 +4,46 @@
     <p class="mt-2 text-sm text-gray-600">Let others know more about you and what you're looking for</p>
   </div>
 
+  <div class="profile-photo-section text-center p-4">
+  <h3 class="text-lg font-medium text-gray-900 mb-4">Profile Photo</h3>
+    <ng-container *ngIf="user$ | async as user">
+    <img 
+        [src]="profilePhotoUrl || ('https://ui-avatars.com/api/?name=' + user.userName)" 
+        alt="Profile Photo" 
+        class="w-32 h-32 rounded-full mx-auto mb-2 object-cover border-2 border-gray-300 bg-gray-100 shadow"
+    >
+    </ng-container>
+  
+
+  <input 
+    type="file" 
+    #fileInput 
+    style="display: none;" 
+    (change)="onFileSelected($event)" 
+    accept="image/png, image/jpeg, image/gif"
+  />
+
+  <button 
+    type="button" 
+    (click)="fileInput.click()"
+    class="mt-2 text-sm bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md shadow-sm transition duration-150 ease-in-out"
+  >
+    Choose Photo
+  </button>
+</div>
+
   <form (ngSubmit)="onSubmit()" class="space-y-8 mb-6">
-    <!-- Personal Information -->
     <div>
       <h3 class="text-lg font-medium text-gray-900 border-b pb-2 mb-4">Personal Information</h3>
-
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-      
         <div>
-            <label for="name" class="block text-sm font-medium text-gray-700">First Name</label>
-            <input type="text" id="name" name="name" [(ngModel)]="name" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" />
+          <label for="name" class="block text-sm font-medium text-gray-700">First Name</label>
+          <input type="text" id="name" name="name" [(ngModel)]="name" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" />
         </div>
-
         <div>
-            <label for="surname" class="block text-sm font-medium text-gray-700">Surname</label>
-            <input type="text" id="surname" name="surname" [(ngModel)]="surname" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" />
+          <label for="surname" class="block text-sm font-medium text-gray-700">Surname</label>
+          <input type="text" id="surname" name="surname" [(ngModel)]="surname" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" />
         </div>
-
         <div>
           <label for="gender" class="block text-sm font-medium text-gray-700">Gender</label>
           <select id="gender" name="gender" [(ngModel)]="gender" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
@@ -28,64 +51,139 @@
             <option value="male">Male</option>
             <option value="female">Female</option>
             <option value="other">Other</option>
-          </select>
+            </select>
         </div>
-
         <div>
           <label for="userType" class="block text-sm font-medium text-gray-700">I am</label>
           <select id="userType" name="userType" [(ngModel)]="userType" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
             <option value="">Select...</option>
             <option value="hr">HR / Recruiter</option>
             <option value="seeker">Looking for Work</option>
-          </select>
+            </select>
         </div>
       </div>
     </div>
 
-    <!-- Profile Details -->
     <div>
       <h3 class="text-lg font-medium text-gray-900 border-b pb-2 mb-4">Professional Details</h3>
-
       <div class="grid grid-cols-1 gap-6">
         <div>
-          <label for="location" class="block text-sm font-medium text-gray-700">Location</label>
+          <label for="location" class="block text-sm font-medium text-gray-700">Your Current Location (e.g., City, Country)</label>
           <input type="text" id="location" name="location" [(ngModel)]="location" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" />
         </div>
-
         <div>
-          <label for="title" class="block text-sm font-medium text-gray-700">Current Title</label>
+          <label for="title" class="block text-sm font-medium text-gray-700">Your Current Title / Headline</label>
           <input type="text" id="title" name="title" [(ngModel)]="title" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" />
         </div>
-
         <div>
           <label for="about" class="block text-sm font-medium text-gray-700">About Me</label>
           <textarea id="about" name="about" [(ngModel)]="about" rows="4" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"></textarea>
         </div>
 
-        <div>
-          <label for="skills" class="block text-sm font-medium text-gray-700">Skills (comma-separated)</label>
-          <input type="text" id="skills" name="skills" [(ngModel)]="skills" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" />
+        <div class="space-y-2">
+          <div class="flex justify-between items-center">
+            <label class="block text-sm font-medium text-gray-700">Skills</label>
+            <button type="button" (click)="addSkill()" class="text-sm bg-green-500 hover:bg-green-600 text-white py-1 px-3 rounded-md shadow-sm">
+              + Add Skill
+            </button>
+          </div>
+          <div *ngIf="skills.length === 0" class="text-xs text-gray-500 px-3 py-2 bg-gray-50 rounded-md">No skills added yet. Click "+ Add Skill" to add one.</div>
+          <div *ngFor="let skill of skills; let i = index" class="flex items-center space-x-2 p-2 border rounded-md bg-gray-50">
+            <input type="text" name="skillName{{i}}" [(ngModel)]="skill.name" placeholder="e.g., JavaScript" class="block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" />
+            <button type="button" (click)="removeSkill(i)" class="text-red-500 hover:text-red-700 text-sm font-medium p-1 rounded-md hover:bg-red-100">Remove</button>
+          </div>
         </div>
 
-        <div>
-          <label for="experience" class="block text-sm font-medium text-gray-700">Experience</label>
-          <textarea id="experience" name="experience" [(ngModel)]="experience" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"></textarea>
+        <div class="space-y-4">
+          <div class="flex justify-between items-center">
+            <h4 class="text-md font-medium text-gray-800">Experience</h4>
+            <button type="button" (click)="addExperience()" class="text-sm bg-green-500 hover:bg-green-600 text-white py-1 px-3 rounded-md shadow-sm">
+              + Add Experience
+            </button>
+          </div>
+          <div *ngIf="experience.length === 0" class="text-xs text-gray-500 px-3 py-2 bg-gray-50 rounded-md">No experience entries added yet.</div>
+          <div *ngFor="let exp of experience; let i = index" class="p-4 border rounded-md shadow-sm space-y-3 bg-white">
+            <div class="flex justify-between items-center">
+              <span class="text-sm font-semibold text-gray-700">Experience #{{i + 1}}</span>
+              <button type="button" (click)="removeExperience(i)" class="text-red-600 hover:text-red-800 text-sm font-medium p-1 rounded-md hover:bg-red-100">Remove Entry</button>
+            </div>
+            <input type="hidden" name="expId{{i}}" [(ngModel)]="exp.id" /> <div>
+              <label for="expPosition{{i}}" class="block text-xs font-medium text-gray-600">Title / Position</label>
+              <input type="text" id="expPosition{{i}}" name="expPosition{{i}}" [(ngModel)]="exp.position" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" placeholder="e.g., Software Engineer" />
+            </div>
+            <div>
+              <label for="expCompany{{i}}" class="block text-xs font-medium text-gray-600">Company</label>
+              <input type="text" id="expCompany{{i}}" name="expCompany{{i}}" [(ngModel)]="exp.company" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" placeholder="e.g., Acme Corp" />
+            </div>
+            <div>
+              <label for="expLocation{{i}}" class="block text-xs font-medium text-gray-600">Location (Optional)</label>
+              <input type="text" id="expLocation{{i}}" name="expLocation{{i}}" [(ngModel)]="exp.location" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" placeholder="e.g., New York, NY" />
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label for="expStartDate{{i}}" class="block text-xs font-medium text-gray-600">Start Date</label>
+                <input type="text" id="expStartDate{{i}}" name="expStartDate{{i}}" [(ngModel)]="exp.startDate" placeholder="YYYY-MM-DD" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" />
+                </div>
+              <div>
+                <label for="expEndDate{{i}}" class="block text-xs font-medium text-gray-600">End Date (or 'Present')</label>
+                <input type="text" id="expEndDate{{i}}" name="expEndDate{{i}}" [(ngModel)]="exp.endDate" placeholder="YYYY-MM-DD or Present" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" />
+              </div>
+            </div>
+            <div>
+              <label for="expDescription{{i}}" class="block text-xs font-medium text-gray-600">Description (Optional)</label>
+              <textarea id="expDescription{{i}}" name="expDescription{{i}}" [(ngModel)]="exp.description" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" placeholder="Key responsibilities and achievements..."></textarea>
+            </div>
+          </div>
         </div>
 
-        <div>
-          <label for="education" class="block text-sm font-medium text-gray-700">Education</label>
-          <textarea id="education" name="education" [(ngModel)]="education" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"></textarea>
+        <div class="space-y-4">
+          <div class="flex justify-between items-center">
+            <h4 class="text-md font-medium text-gray-800">Education</h4>
+            <button type="button" (click)="addEducation()" class="text-sm bg-green-500 hover:bg-green-600 text-white py-1 px-3 rounded-md shadow-sm">
+              + Add Education
+            </button>
+          </div>
+          <div *ngIf="education.length === 0" class="text-xs text-gray-500 px-3 py-2 bg-gray-50 rounded-md">No education entries added yet.</div>
+          <div *ngFor="let edu of education; let i = index" class="p-4 border rounded-md shadow-sm space-y-3 bg-white">
+            <div class="flex justify-between items-center">
+              <span class="text-sm font-semibold text-gray-700">Education #{{i + 1}}</span>
+              <button type="button" (click)="removeEducation(i)" class="text-red-600 hover:text-red-800 text-sm font-medium p-1 rounded-md hover:bg-red-100">Remove Entry</button>
+            </div>
+            <input type="hidden" name="eduId{{i}}" [(ngModel)]="edu.id" /> <div>
+              <label for="eduDegree{{i}}" class="block text-xs font-medium text-gray-600">Degree / Qualification</label>
+              <input type="text" id="eduDegree{{i}}" name="eduDegree{{i}}" [(ngModel)]="edu.degree" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" placeholder="e.g., Bachelor of Science" />
+            </div>
+            <div>
+              <label for="eduInstitution{{i}}" class="block text-xs font-medium text-gray-600">Institution</label>
+              <input type="text" id="eduInstitution{{i}}" name="eduInstitution{{i}}" [(ngModel)]="edu.institution" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" placeholder="e.g., University of Example" />
+            </div>
+            <div>
+              <label for="eduDomain{{i}}" class="block text-xs font-medium text-gray-600">Domain / Field of Study (Optional)</label>
+              <input type="text" id="eduDomain{{i}}" name="eduDomain{{i}}" [(ngModel)]="edu.domain" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" placeholder="e.g., Computer Science" />
+            </div>
+            <div>
+              <label for="eduMajor{{i}}" class="block text-xs font-medium text-gray-600">Major (Optional)</label>
+              <input type="text" id="eduMajor{{i}}" name="eduMajor{{i}}" [(ngModel)]="edu.major" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" placeholder="e.g., Artificial Intelligence" />
+            </div>
+            <div>
+              <label for="eduGraduationYear{{i}}" class="block text-xs font-medium text-gray-600">Graduation Year (Optional)</label>
+              <input type="number" id="eduGraduationYear{{i}}" name="eduGraduationYear{{i}}" [(ngModel)]="edu.graduationYear" placeholder="e.g., 2018" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" />
+            </div>
+             <div>
+              <label for="eduDescription{{i}}" class="block text-xs font-medium text-gray-600">Description / Notes (Optional)</label>
+              <textarea id="eduDescription{{i}}" name="eduDescription{{i}}" [(ngModel)]="edu.description" rows="2" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" placeholder="Relevant coursework, honors, etc."></textarea>
+            </div>
+          </div>
         </div>
-      </div>
+        </div>
     </div>
 
-    <button type="submit" class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition">
+    <button type="submit" class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
       Save Profile
     </button>
 
-    <!-- Feedback messages -->
-    <p class="text-red-500 mt-4" *ngIf="errorMessage">{{ errorMessage }}</p>
-    <p class="text-green-500 mt-4" *ngIf="successMessage">{{ successMessage }}</p>
+    <p class="text-red-500 mt-4 text-sm" *ngIf="errorMessage">{{ errorMessage }}</p>
+    <p class="text-green-500 mt-4 text-sm" *ngIf="successMessage">{{ successMessage }}</p>
     
   </form>
 </div>

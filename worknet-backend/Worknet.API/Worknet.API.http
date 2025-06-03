@@ -43,3 +43,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hc
 ###
 POST {{Worknet.API_HostAddress}}/api/profile/upload-file
 Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+GET {{Worknet.API_HostAddress}}/api/profile
+
+###
