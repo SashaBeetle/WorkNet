@@ -18,7 +18,7 @@ import { CommonModule, AsyncPipe } from '@angular/common';
 export class HeaderComponent {
   user$: Observable<User | null>;
   isLoaded$: Observable<boolean>;
-  displayState$: Observable<'initialLoading' | 'appLoading' | 'guest' | 'user'>;
+  displayState$: Observable<'initialLoading' | 'guest' | 'user'>;
 
   constructor(
     private authService: AuthService,
@@ -54,7 +54,7 @@ export class HeaderComponent {
       }),
       startWith('initialLoading' as const),
       tap(currentState => {
-        console.log('Current displayState$:', currentState); // <-- THIS LINE
+        console.log('Current displayState$:', currentState);
       }),
       distinctUntilChanged()
     );
@@ -62,6 +62,7 @@ export class HeaderComponent {
 
   logout() {
     this.authService.logout();
-    this.router.navigate(['/']);
-  }
+      this.router.navigate(['/']).then(() => {
+      window.location.reload();
+    })  }
 }

@@ -12,6 +12,8 @@ public class WorknetDbContext : IdentityDbContext<User>
     public DbSet<GoogleDriveFile> Files { get; set; }
     public DbSet<Experience> Experiences { get; set; }
     public DbSet<Education> Educations { get; set; }
+    public DbSet<Post> Posts { get; set; }
+
     public override int SaveChanges()
     {
         UpdateTimestamps();

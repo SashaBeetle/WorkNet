@@ -6,5 +6,7 @@ public interface IProfileService
     public Task<ProfileDto> CreateProfileAsync(ProfileDto profileDto);
     public Task<ProfileDto> UpdateProfileAsync(ProfileDto profileDto);
     public Task<ProfileDto?> GetProfileByUserId(string userId);
+    public Task<ProfileDto?> GetProfileWithIncludesByUserId(string userId);
+    public Task<ProfileDto?> GetProfileWithUserByUserId(string userId);
     public Task<bool> IsProfileExistForUserByUserId(string userId);
 }

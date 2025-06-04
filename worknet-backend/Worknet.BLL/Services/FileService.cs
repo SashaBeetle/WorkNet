@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Worknet.BLL.Exceptions;
 using Worknet.BLL.Interfaces;
 using Worknet.Core.Entities;
@@ -43,6 +44,7 @@ public class FileService(
     {
         var files = dbContext.Files
             .Where(f => fileIds.Contains(f.Id))
+            .AsNoTracking()
             .ToList();
 
         var dtos = mapper.Map<List<GoogleDriveFileDto>>(files);

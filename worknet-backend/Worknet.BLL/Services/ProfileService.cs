@@ -28,9 +28,33 @@ public class ProfileService(IMapper mapper, WorknetDbContext dbContext) : IProfi
             throw new WorknetException("UserId cannot be null or empty.");
 
         var profile = dbContext.Profiles.Where(e => e.UserId.Equals(userId))
+            .FirstOrDefault();
+
+        return mapper.Map<ProfileDto>(profile);
+    }
+
+    public async Task<ProfileDto?> GetProfileWithIncludesByUserId(string userId)
+    {
+        if (userId is null || string.IsNullOrEmpty(userId))
+            throw new WorknetException("UserId cannot be null or empty.");
+
+        var profile = dbContext.Profiles.Where(e => e.UserId.Equals(userId))
             .Include(x => x.Experiences)
             .Include(x => x.Educations)
             .Include(x => x.Skills)
+            .Include(x => x.User)
+            .FirstOrDefault();
+
+        return mapper.Map<ProfileDto>(profile);
+    }
+
+    public async Task<ProfileDto?> GetProfileWithUserByUserId(string userId)
+    {
+        if (userId is null || string.IsNullOrEmpty(userId))
+            throw new WorknetException("UserId cannot be null or empty.");
+
+        var profile = dbContext.Profiles.Where(e => e.UserId.Equals(userId))
+            .Include(x => x.User)
             .FirstOrDefault();
 
         return mapper.Map<ProfileDto>(profile);

@@ -12,7 +12,6 @@ namespace Worknet.API.Controllers;
 public class ProfileController(IProfileService profileService) : ControllerBase
 {
     [HttpPost("upload-file")]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<IActionResult> UploadFile([FromForm] IFormFile file, [FromServices] IFileService fileService)
     {
         if (file == null || file.Length == 0)
@@ -25,7 +24,6 @@ public class ProfileController(IProfileService profileService) : ControllerBase
     }
 
     [HttpPut]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<IActionResult> HandleProfile([FromBody] ProfileDto profile)
     {
         if (profile is null) return BadRequest();
@@ -45,7 +43,6 @@ public class ProfileController(IProfileService profileService) : ControllerBase
     }
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<IActionResult> GetProfile()
     {
         try
@@ -55,7 +52,7 @@ public class ProfileController(IProfileService profileService) : ControllerBase
             if (string.IsNullOrEmpty(userId))
                 return Unauthorized();
 
-            var profile = await profileService.GetProfileByUserId(userId);
+            var profile = await profileService.GetProfileWithIncludesByUserId(userId);
 
             if (profile is null)
                 return NotFound();
@@ -69,7 +66,6 @@ public class ProfileController(IProfileService profileService) : ControllerBase
     }
 
     [HttpGet("info")]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<IActionResult> GetProfileInfo()
     {
         try
@@ -79,7 +75,7 @@ public class ProfileController(IProfileService profileService) : ControllerBase
             if (string.IsNullOrEmpty(userId))
                 return Unauthorized();
 
-            var profile = await profileService.GetProfileByUserId(userId);
+            var profile = await profileService.GetProfileWithIncludesByUserId(userId);
 
             if (profile is null)
                 return NotFound();

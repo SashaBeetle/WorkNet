@@ -1,3 +1,5 @@
+import { User } from "./user.models";
+
 export interface Skill { // SkillDto does not have its own Id, Name is key within profile
   name: string;
 }
@@ -12,21 +14,18 @@ export interface Experience { // Matches ExperienceDto structure more closely
   description?: string;
 }
 
-export interface Education { // Matches EducationDto structure more closely
+export interface Education { 
   id: string | null; // Corresponds to EducationDto.Id, can be null for new items
   degree: string;
   institution: string;
   domain?: string;       // Was 'fieldOfStudy', maps to 'Domain' in DTO
   major?: string;        // Added to match EducationDto if needed in form
-  graduationYear?: number | null; // Was string, DTO has int.
+  graduationYear?: number | null; 
   description?: string;
 }
 
-// Define interfaces for DTOs to be sent (optional but good for type safety)
-// These would mirror your C# DTOs
 export interface SkillDto {
   name: string;
-  // ProfileId is set by backend
 }
 
 export interface EducationDto {
@@ -45,18 +44,17 @@ export interface ExperienceDto {
   position?: string;
   company?: string;
   location?: string;
-  startDate?: string | null; // Send as ISO string or null
-  endDate?: string | null;   // Send as ISO string or null
+  startDate?: string | null; 
+  endDate?: string | null;   
   description?: string;
-  // ProfileId is set by backend
 }
 
 export interface ProfileDtoPayload {
   id?: string | null;
-  profileType?: string | null; // Or map to specific ProfileType enum value/string
+  profileType?: string | null; 
   firstName?: string;
   lastName?: string;
-  gender?: string | null;      // Or map to specific GenderEnum value/string
+  gender?: string | null;      
   headline?: string;
   about?: string;
   location?: string;
@@ -65,5 +63,21 @@ export interface ProfileDtoPayload {
   skills?: SkillDto[];
   educations?: EducationDto[];
   experiences?: ExperienceDto[];
-  files?: any[]; // Assuming GoogleDriveFile structure, sending empty for now
+  files?: any[]; 
+}
+
+export interface Profile{
+    id: string
+    profileType: string;
+    firstName: string;
+    lastName: string;
+    gender: string;
+    headline: string;
+    about: string;
+    location: string;
+    profilePhotoId: string;
+    createdAt: string;
+
+    skills: Skill[];
+    user: User;
 }

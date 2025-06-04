@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Worknet.BLL.Interfaces;
@@ -17,6 +16,7 @@ public class AuthController(IUserService userService, IOptions<JwtConfig> jwtOpt
     private readonly JwtConfig _jwtConfig = jwtOptions.Value;
 
     [HttpPost("login")]
+    [AllowAnonymous]
     public async Task<IActionResult> Login([FromBody] AuthUser authUser)
     {
         var user = await userService.IsUserLoggedIn(authUser);
@@ -27,6 +27,7 @@ public class AuthController(IUserService userService, IOptions<JwtConfig> jwtOpt
     }
 
     [HttpPost("register")]
+    [AllowAnonymous]
     public async Task<IActionResult> Register([FromBody] RegisterUser registerUser)
     {
         var userInfo = await userService.CreateUserAsync(registerUser);
@@ -37,7 +38,6 @@ public class AuthController(IUserService userService, IOptions<JwtConfig> jwtOpt
     }
 
     [HttpPost("logout")]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<IActionResult> Logout()
     {
         await userService.UserLogoutAsync();

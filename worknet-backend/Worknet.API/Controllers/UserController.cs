@@ -13,7 +13,6 @@ namespace Worknet.API.Controllers
     public class UserController(IUserService userService) : ControllerBase
     {
         [HttpGet("me")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult<UserDto>> GetCurrentUser()
         {
             try
@@ -36,7 +35,6 @@ namespace Worknet.API.Controllers
             }
         }
         [HttpGet("user/{id?}")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult<UserDto>> GetUserDetails(string? id = null) 
         {
             try
