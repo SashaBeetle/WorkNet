@@ -12,9 +12,11 @@ public class ProfileDto
     public string? Headline { get; set; } = string.Empty; // Title
     public string? About { get; set; } = string.Empty;
     public string? Location { get; set; } = string.Empty;
+    public string? ProfilePhotoId { get; set; }
+    public DateTime? CreatedAt { get; set; }
 
     public string? UserId { get; set; }
-    public string? ProfilePhotoId { get; set; }
+    public User? User { get; set; }
     public ICollection<SkillDto>? Skills { get; set; }
     public ICollection<EducationDto>? Educations { get; set; }
     public ICollection<ExperienceDto>? Experiences { get; set; }

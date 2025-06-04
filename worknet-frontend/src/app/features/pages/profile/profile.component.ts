@@ -18,9 +18,9 @@ import { Skill, Experience, Education, ProfileDtoPayload } from '../../../core/m
 export class ProfileComponent {
   user$: Observable<User | null>;
 
-  profileId: string | null = null; // Populate this if editing an existing profile (e.g., in ngOnInit)
-  userId: string | null = null;    // Populate this from auth service (e.g., in ngOnInit)
-
+  profileId: string | null = null; 
+  userId: string | null = null;    
+  
   name: string = '';    // Will map to FirstName
   surname: string = ''; // Will map to LastName
   gender: string = '';  // String values "male", "female", "other"
@@ -274,12 +274,8 @@ export class ProfileComponent {
       return null;
     }
     try {
-      // Attempt to create a date. This is a basic conversion.
-      // For more robust parsing of formats like "Jan 2020", you'd need a library like date-fns or moment.
-      // Assuming input is YYYY-MM-DD or directly parsable by Date constructor for YYYY-MM-DD output.
       const date = new Date(dateStr);
-      if (isNaN(date.getTime())) return null; // Invalid date string
-      // Return date in YYYY-MM-DD format
+      if (isNaN(date.getTime())) return null;
       const year = date.getFullYear();
       const month = (date.getMonth() + 1).toString().padStart(2, '0');
       const day = date.getDate().toString().padStart(2, '0');
@@ -307,13 +303,13 @@ export class ProfileComponent {
   if (this.gender && this.gender !== '') {
     switch (this.gender.toLowerCase()) {
       case 'male':
-        genderForPayload = 'Male'; // Assuming C# enum member is 'Male'
+        genderForPayload = 'Male'; 
         break;
       case 'female':
-        genderForPayload = 'Female'; // Assuming C# enum member is 'Female'
+        genderForPayload = 'Female'; 
         break;
       case 'other':
-        genderForPayload = 'Other'; // Assuming C# enum member is 'Other'
+        genderForPayload = 'Other'; 
         break;
       default:
         genderForPayload = null; 
@@ -323,7 +319,7 @@ export class ProfileComponent {
 
     const payload: ProfileDtoPayload = {
       id: this.profileId, // Include the profile's ID if updating
-      userId: this.userId, // Include the logged-in user's ID
+      userId: this.userId,
 
       firstName: this.name,
       lastName: this.surname,

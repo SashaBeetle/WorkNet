@@ -13,6 +13,7 @@ public class MappingProfile : Profile
         CreateMap<User, UserInfo>();
         CreateMap<GoogleDriveFile, GoogleDriveFileDto>().ReverseMap();
         CreateMap<ProfileEntity, ProfileDto>().ReverseMap();
+        CreateMap<Post, PostDto>().ReverseMap();
 
         CreateMap<EducationDto, Education>()
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src =>

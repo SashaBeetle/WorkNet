@@ -1,65 +1,131 @@
-<!-- Main Container -->
 <div class="pt-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
 
   <!-- Profile Sidebar -->
  <div class="hidden md:block">
-  <div class="bg-white shadow rounded-lg p-4 relative">
-    <span class="absolute top-4 left-4 inline-flex items-center rounded-md bg-purple-50 px-2 py-1 text-xs font-medium text-purple-700 ring-1 ring-purple-700/10 ring-inset">
-      HR
-    </span>
-    <div class="flex justify-end gap-16">
+  <ng-container *ngIf="(profile$ | async) as Profile; else guest">
+    <div class="bg-white shadow rounded-lg p-4 relative">
+      @if(Profile.profileType == 'Recruiter'){
+        <span class="absolute top-4 left-4 inline-flex items-center rounded-md bg-purple-50 px-2 py-1 text-xs font-medium text-purple-700 ring-1 ring-purple-700/10 ring-inset">
+          Recruiter
+        </span>
+      }
+      @else{
+        <span class="absolute top-4 left-4 inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-purple-700/10 ring-inset">
+          Candidate
+        </span>
+      }
       
-      <div class="text-center ">
-        <h3 class="text-lg font-semibold">John Doe</h3>
-        <p class="text-sm text-gray-500">Software Developer</p>
+      <div class="flex justify-end gap-16">
+        
+        <div class="text-center ">
+          <h3 class="text-lg font-semibold">  
+            {{ (Profile.firstName || Profile.lastName) ? (Profile.firstName + ' ' + Profile.lastName) : Profile.user.userName }}
+          </h3>
+          <p class="text-sm text-gray-500">{{Profile.headline}}</p>
+        </div>
+            
+        <img [src]="profileUrl" 
+            class="rounded-full w-14 h-14" alt="Avatar">
       </div>
+      <div class="text-center mt-4">
+        <button 
+          (click)="isMoreInfoVisible = !isMoreInfoVisible"
+          class="mt-4 w-full text-sm text-blue-600">
+          {{ isMoreInfoVisible ? 'Less' : 'More'  }}
+        </button>
+      </div>
+        <div *ngIf="isMoreInfoVisible"
+          @slideToggle
+          class="mt-4 text-sm text-gray-700">
           
-      <img [src]="'https://ui-avatars.com/api/?name=' + user.name + '+' + user.surname" 
-           class="rounded-full w-14 h-14" alt="Avatar">
-    </div>
-    <div class="text-center mt-4">
-      <button 
-        (click)="isMoreInfoVisible = !isMoreInfoVisible"
-        class="mt-4 w-full text-sm text-blue-600">
-        {{ isMoreInfoVisible ? 'Less' : 'More'  }}
-      </button>
-    </div>
-
-          <div *ngIf="isMoreInfoVisible"
-            @slideToggle
-            class="mt-4 text-sm text-gray-700">
-            <p><strong>Email:</strong> dgacmail.com</p>
-            <p><strong>Location:</strong> San Francisco, CA</p>
-            <p><strong>Joined:</strong> January 2023</p>
+          <p><strong>Email:</strong> {{Profile.user.email}}</p>
+          <p><strong>Location:</strong> {{Profile.location}}</p>
+          <p><strong>Joined:</strong> {{Profile.createdAt | date:'MMMM y'}}</p>
+          <div>  <p class="font-semibold">Skills:</p>
+            @if (Profile.skills && Profile.skills.length > 0) {
+              <div class="flex flex-wrap gap-2 mt-1">
+                @for (skill of Profile.skills; track skill.name) {
+                  <span class="inline-flex items-center rounded-full bg-sky-100 px-2.5 py-0.5 text-xs font-medium text-sky-700 ring-1 ring-inset ring-sky-700/10">
+                    {{ skill.name }}
+                  </span>
+                }
+              </div>
+            } @else {
+              <p class="text-gray-500 italic mt-1">No skills listed.</p>
+            }
           </div>
-     
-  </div>
+        </div>
+    </div>
+  </ng-container>
+
+    <ng-template #guest>
+      <div class="relative rounded-xl bg-white p-6 text-center shadow-xl sm:p-8">
+        <div class="py-5">
+          <h2 class="mb-3 text-2xl font-bold tracking-tight text-gray-900">
+            Welcome!
+          </h2>
+          <p class="mb-8 max-w-md text-pretty text-sm text-gray-600 sm:mx-auto">
+            Sign in or create an account to connect, share insights, and explore
+            your professional network.
+          </p>
+
+          <div
+            class="mx-auto grid max-w-xs grid-cols-1 gap-4 sm:max-w-sm sm:grid-cols-2"
+          >
+            <a
+              href="/login"
+              class="rounded-lg border border-gray-300 bg-white px-6 py-2.5 text-sm font-semibold text-gray-800 shadow-sm transition-all duration-150 ease-in-out hover:border-gray-400 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            >
+              Login
+            </a>
+            <a
+              href="/register"
+              class="rounded-lg bg-blue-600 px-6 py-2.5 text-sm font-semibold text-white shadow-md transition-all duration-150 ease-in-out hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 active:bg-blue-700"
+            >
+              Sign Up
+            </a>
+          </div>
+        </div>
+      </div>
+    </ng-template>
 </div>
 
   <!-- Feed Section -->
   <div class="md:col-span-2 space-y-4">
-    <!-- Create Post Card -->
-    <div class="bg-white shadow rounded-lg p-4">
-      <textarea placeholder="What's on your mind?" rows="3" class="w-full border rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"></textarea>
-      <div class="flex justify-end mt-2">
-        <button class="text-white bg-blue-600 hover:bg-blue-700 font-medium rounded-lg text-sm px-4 py-2">Post</button>
+    
+    <ng-container *ngIf="(profile$ | async) as Profile;">
+      <div class="bg-white shadow rounded-lg p-4">
+<textarea
+  placeholder="What's on your mind?"
+  rows="3"
+  class="w-full border rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+  [(ngModel)]="newPostContent">
+</textarea>        <div class="flex justify-end mt-2">
+          <button 
+  (click)="addPost()"
+  class="text-white bg-blue-600 hover:bg-blue-700 font-medium rounded-lg text-sm px-4 py-2">
+  Post
+</button>
+        </div>
+      </div>
+
+     
+    </ng-container>    
+
+    <div *ngFor="let post of posts; index as i" class="bg-white shadow rounded-lg p-4">
+      <div class="flex space-x-4">
+        <img [src]="post.user?.img || ('https://ui-avatars.com/api/?name=' + (post.user?.userName || 'U'))"
+            class="rounded-full w-8 h-8" alt="Avatar">
+        <div>
+          <h4 class="font-semibold">{{ post.user?.userName }}</h4>
+          <p class="text-sm text-gray-500">{{ post.createdAt | date:'dd:MM:yy' }}</p>
+          <p class="mt-2 text-sm">{{ post.data }}</p>
+        </div>
       </div>
     </div>
 
-    @for (post of posts; track $index) 
-    {
-      <!-- Sample Post -->
-      <div class="bg-white shadow rounded-lg p-4">
-        <div class="flex space-x-4">
-          <img src="https://img.freepik.com/premium-photo/3d-avatar-cartoon-character_113255-93283.jpg" class="rounded-full w-8 h-8" alt="Avatar">
-          <div>
-            <h4 class="font-semibold">{{post.name}}</h4>
-            <p class="text-sm text-gray-500">{{post.time}}</p>
-            <p class="mt-2 text-sm">{{post.content}}</p>
-          </div>
-        </div>
-      </div>
-    }
-    <!-- Repeat this post block for more posts -->
+    <div *ngIf="posts?.length === 0" class="text-center text-gray-500 italic">
+    No posts available.
+  </div>
   </div>
 </div>
