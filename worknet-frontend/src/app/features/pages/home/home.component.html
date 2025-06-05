@@ -95,24 +95,25 @@
     
     <ng-container *ngIf="(profile$ | async) as Profile;">
       <div class="bg-white shadow rounded-lg p-4">
-<textarea
-  placeholder="What's on your mind?"
-  rows="3"
-  class="w-full border rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
-  [(ngModel)]="newPostContent">
-</textarea>        <div class="flex justify-end mt-2">
+        <textarea
+          placeholder="What's on your mind?"
+          rows="3"
+          class="w-full border rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+          [(ngModel)]="newPostContent">
+        </textarea>        
+        <div class="flex justify-end mt-2">
           <button 
-  (click)="addPost()"
-  class="text-white bg-blue-600 hover:bg-blue-700 font-medium rounded-lg text-sm px-4 py-2">
-  Post
-</button>
+            (click)="addPost()"
+            class="text-white bg-blue-600 hover:bg-blue-700 font-medium rounded-lg text-sm px-4 py-2">
+            Post
+          </button>
         </div>
       </div>
 
      
     </ng-container>    
 
-    <div *ngFor="let post of posts; index as i" class="bg-white shadow rounded-lg p-4">
+    <!-- <div *ngFor="let post of posts; index as i" class="bg-white shadow rounded-lg p-4">
       <div class="flex space-x-4">
         <img [src]="post.user?.img || ('https://ui-avatars.com/api/?name=' + (post.user?.userName || 'U'))"
             class="rounded-full w-8 h-8" alt="Avatar">
@@ -122,10 +123,29 @@
           <p class="mt-2 text-sm">{{ post.data }}</p>
         </div>
       </div>
-    </div>
+    </div> -->
 
-    <div *ngIf="posts?.length === 0" class="text-center text-gray-500 italic">
-    No posts available.
-  </div>
+    @for (post of (posts$ | async); track post.id) {
+      <!-- Sample Post -->
+      <div class="bg-white shadow rounded-lg p-4">
+        <div class="flex space-x-4">
+        <img 
+            [src]="post.profilePhotoId ? ('https://drive.google.com/thumbnail?id=' + post.profilePhotoId) : ('https://ui-avatars.com/api/?name=' + (post.user?.userName || 'U') + '&background=random&color=fff&rounded=true&size=32')" 
+            class="rounded-full w-8 h-8" alt="Avatar">
+        <div>
+          <h4 class="font-semibold">{{ post.user?.userName }}</h4>
+          <p class="text-sm text-gray-500">{{ post.createdAt | date:'dd:MM:yy' }}</p>
+          <p class="mt-2 text-sm">{{ post.data }}</p>
+        </div>
+      </div>
+      </div>
+    } @empty {
+      <!-- This block will be shown if (posts$ | async) is null or an empty array -->
+      <div class="bg-white shadow rounded-lg p-4 text-center text-gray-500">
+        <p>No posts to display yet. Be the first to share something!</p>
+        <!-- You could add a loading indicator here if posts are being fetched -->
+        <!-- <p *ngIf="isLoadingPosts">Loading posts...</p> --> 
+      </div>
+    }
   </div>
 </div>

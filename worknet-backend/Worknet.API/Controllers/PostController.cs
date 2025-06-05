@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Worknet.BLL.Interfaces;
 using Worknet.Shared.Models.DTOs;
+using Worknet.Shared.Models.Requests;
 
 namespace Worknet.API.Controllers
 {
@@ -29,12 +30,11 @@ namespace Worknet.API.Controllers
         }
 
         [HttpPost]
-        [AllowAnonymous]
-        public async Task<IActionResult> CreatePost([FromBody] PostDto postDto)
+        public async Task<IActionResult> CreatePost([FromBody] AddPostRequest request)
         {
             try
             {
-                var post = await postService.CreatePostAsync(postDto);
+                var post = await postService.CreatePostAsync(request);
 
                 if (post is null)
                     return NotFound();

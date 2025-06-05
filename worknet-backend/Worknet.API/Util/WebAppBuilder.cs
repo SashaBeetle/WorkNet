@@ -85,6 +85,8 @@ internal static class WebAppBuilder
                 .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
                 .Build();
         });
+
+        services.AddHttpContextAccessor();
     }
 
     public static void AddConfigs(IConfiguration configurations, IServiceCollection services)

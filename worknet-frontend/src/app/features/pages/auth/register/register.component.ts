@@ -44,7 +44,7 @@ export class RegisterComponent {
       .subscribe({
         next: () => {
           this.successMessage = 'Account created successfully!';
-          this.router.navigate(['/']);
+          this.router.navigate(['/profile']);
         },
         error: (err) => {
           this.errorMessage = err.error?.message || 'Registration failed';
