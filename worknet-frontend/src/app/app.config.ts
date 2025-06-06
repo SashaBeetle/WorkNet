@@ -13,6 +13,8 @@ import {provideStoreDevtools } from'@ngrx/store-devtools';
 import { environment } from '../environments/environment';
 import { provideEffects } from '@ngrx/effects';
 import { ProfileEffects } from './ngrx/effects/profile.effects';
+import { PostEffects } from './ngrx/effects/post.effects';
+import { postFeatureKey, postReducer } from './ngrx/reducers/post.reducer';
 
 
 export const appConfig: ApplicationConfig = {
@@ -26,8 +28,10 @@ export const appConfig: ApplicationConfig = {
     //NgRx
     provideStore({ user: userReducer }),
     provideState(profileFeatureKey, profileReducer),
+    provideState(postFeatureKey, postReducer),
     provideEffects([
-      ProfileEffects
+      ProfileEffects,
+      PostEffects
     ]),
     
     provideStoreDevtools({ maxAge: 25, logOnly: environment.production }),

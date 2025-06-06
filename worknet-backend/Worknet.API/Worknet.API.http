@@ -47,3 +47,13 @@ Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0g
 GET {{Worknet.API_HostAddress}}/api/profile
 
 ###
+
+POST {{Worknet.API_HostAddress}}/api/post
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjRlMTRiZmU4LTFlZjctNGJlMC1hYmU1LTYxYWEzODMxYmRmMSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiJPTEVLU0FORFIiLCJleHAiOjE3NDk0MDEwNTYsImlzcyI6IldvcmtuZXRBcHAiLCJhdWQiOiJXb3JrbmV0VXNlcnMifQ.WPih7pjMVj_MPC9-3i37GI9tnwxwqI1dAJHkXwl2ThU
+
+{
+  "data": "This is a mock post content"
+}
+
+###

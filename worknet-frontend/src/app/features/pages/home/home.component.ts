@@ -11,7 +11,10 @@ import { DatePipe } from '@angular/common';
 import { ApiService } from '../../../core/services/api.service';
 import { User } from '../../../core/models/user.models';
 import { FormsModule } from '@angular/forms';
-
+import { Post, PostPayload } from '../../../core/models/post.models';
+import { selectPostsData } from '../../../ngrx/selectors/post.selectors';
+import * as PostActions from '../../../ngrx/actions/post.actions';
+import { Router } from '@angular/router';
 export interface PostDto {
   id?: string;
   createdAt?: string;     // Dates from JSON are typically strings (ISO 8601 format)
@@ -52,19 +55,20 @@ export interface DisplayPost {
 export class HomeComponent {
   profile$: Observable<Profile | null>;
   profileUrl: string | undefined;
+  posts$: Observable<Post[] | null>
   isMoreInfoVisible = false;
-  newPostContent: string = '';
   currentUserName: string = '';
+  newPostContent: string = '';
 
-  constructor(private store: Store, private apiService: ApiService) {
-
+  constructor(private store: Store, private apiService: ApiService, private router: Router) {
     this.profile$ = this.store.select(selectProfileData);
-    
+    this.posts$ = this.store.select(selectPostsData)
   }
 
   ngOnInit(){
 
     this.store.dispatch(ProfileActions.loadProfile());
+    this.store.dispatch(PostActions.loadPosts());
 
     this.profile$.subscribe(profileData => {
       console.log('Profile data from NgRx:', profileData);
@@ -80,9 +84,7 @@ export class HomeComponent {
    this.apiService.get<PostDto[]>('post') // Using your ApiService. 'post' will be appended to your baseUrl.
       .subscribe({
         next: (fetchedBackendPosts) => {
-          // Transform PostDto[] from backend to DisplayPost[] for the template
-          //this.posts = fetchedBackendPosts.map(dto => this.transformToDisplayPost(dto));
-          console.log('Posts fetched and transformed successfully:', this.posts);
+          // console.log('Posts fetched and transformed successfully:', this.posts);
         },
         error: (error) => {
           console.error('Error fetching posts:', error);
@@ -91,28 +93,45 @@ export class HomeComponent {
 
   }
 addPost(): void {
+
+const payload = {
+  data: this.newPostContent
+};
+
+this.apiService.post<PostDto>('post', payload) 
+      .subscribe({
+        next: (fetchedPost) => {
+          //this.posts.push(fetchedPost);
+          // console.log('Post fetched and transformed successfully:', this.posts);
+        },
+        error: (error) => {
+          console.error('Error fetching posts:', error);
+        }
+      });
+
   // Обрізаємо пробіли
-  const trimmedContent = this.newPostContent.trim();
+  // const trimmedContent = this.newPostContent.trim();
 
-  // Якщо пост порожній — не додаємо
-  if (!trimmedContent) return;
+  // // Якщо пост порожній — не додаємо
+  // if (!trimmedContent) return;
 
-  const newPost = {
-    user: {
-      id: 'current-user', // замініть, якщо маєте ID користувача
-      userName: this.currentUserName || 'Anonymous',
-      email: '',
-      img: this.profileUrl || `https://ui-avatars.com/api/?name=${this.currentUserName || 'User'}`
-    },
-    createdAt: new Date().toISOString(),
-    data: trimmedContent
-  };
+  // const newPost = {
+  //   user: {
+  //     id: 'current-user', // замініть, якщо маєте ID користувача
+  //     userName: this.currentUserName || 'Anonymous',
+  //     email: '',
+  //     img: this.profileUrl || `https://ui-avatars.com/api/?name=${this.currentUserName || 'User'}`
+  //   },
+  //   createdAt: new Date().toISOString(),
+  //   data: trimmedContent
+  // };
 
-  // Додаємо пост в початок масиву (як у соцмережах)
-  this.posts.unshift(newPost);
+  // // Додаємо пост в початок масиву (як у соцмережах)
+  // this.posts.unshift(newPost);
 
-  // Очищаємо textarea
+  // // Очищаємо textarea
   this.newPostContent = '';
+  window.location.reload();
 }
   private transformToDisplayPost(dto: PostDto): DisplayPost {
     let authorName = 'Unknown User';
@@ -136,66 +155,7 @@ addPost(): void {
       avatarUrl: authorAvatar,
       originalData: dto
     };
-  }
-
- 
-  posts = [
-      {
-        user: {
-          id: "user123",
-          userName: "SashaBeetle",
-          email: '',
-          img: "https://drive.google.com/thumbnail?id=1k_x-W5rTqvL9SwjsTiWcHBBbWP8OSEjp"
-
-        },
-        createdAt: "2024-06-04T10:30:00Z",
-        data: "Щойно завершив роботу над новим функціоналом для WorkNet! Дуже задоволений результатом. #angular #dotnet #worknet"
-      },
-      {
-        user: {
-          id: "user456",
-          userName: "DevCommunity",
-          email: '',
-          img: "https://img.freepik.com/premium-photo/3d-avatar-cartoon-character_113255-93283.jpg"
-
-        },
-        createdAt: "2024-06-03T15:45:10Z",
-        data: "Обговорюємо найкращі практики для створення професійних мережевих платформ. Які ваші думки щодо WorkNet?"
-      },
-      {
-        user: {
-          id: "user789",
-          userName: "TechRecruiterUA",
-          email: '',
-          img: "https://ui-avatars.com/api/?name=T"
-        },
-        createdAt: "2024-06-02T09:15:00Z",
-        data: "Шукаю талановитих розробників для цікавого проекту. WorkNet виглядає як чудове місце для пошуку кандидатів! #recruiting #ITjobs"
-      },
-      {
-        user: {
-          id: "user101",
-          userName: "JaneDoeDev",
-          email: '',
-          img: "https://ui-avatars.com/api/?name=A+B"
-        },
-        createdAt: "2024-05-30T18:00:00Z",
-        data: "Ділюся своїм досвідом використання Angular та NgRx для управління станом у великих додатках. Сподіваюся, це буде корисно для спільноти WorkNet."
-      }
-    ];
-
-    
+  }    
 }
-//  posts = [
-//     {
-//       name: 'Jane Smith',
-//       time: '2 hours ago',
-//       content: 'This is an example post to mimic LinkedIn’s feed.',
-//     },
-//     {
-//       name: 'Alex Johnson',
-//       time: '5 hours ago',
-//       content: 'Just launched my new project! 🚀',
-//     },
-//   ];
+
 

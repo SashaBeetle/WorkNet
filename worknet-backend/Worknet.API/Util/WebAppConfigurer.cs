@@ -1,11 +1,17 @@
-﻿using Worknet.Shared.Constantsl;
+﻿using Microsoft.AspNetCore.Builder;
+using Worknet.Shared.Constantsl;
+using Worknet.Shared.Helpers;
 
 namespace Worknet.API.Util;
 internal static class WebAppConfigurer
 {
     public static async Task ConfugureWebApp(WebApplication app)
     {
+        var serviceProvider = app.Services;
+
         app.UseCors(AppSettings.FrontendAppName);
+        ConfigureStaticMembers(serviceProvider);
+
         if (app.Environment.IsDevelopment())
         {
             app.MapOpenApi();
@@ -18,5 +24,10 @@ internal static class WebAppConfigurer
         app.UseAuthorization();
 
         app.MapControllers();
+    }
+
+    private static void ConfigureStaticMembers(IServiceProvider serviceProvider)
+    {
+        UserHelper.Configure(serviceProvider.GetRequiredService<IHttpContextAccessor>());
     }
 }
